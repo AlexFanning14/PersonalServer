@@ -1,8 +1,13 @@
+html {
+    background: lightskyblue;
+}
+
 body {
-    background: white;
-    color: yellow;
+    background: lightskyblue;
+    color: black;
 }
 
 div.all-content-div {
-    background: grey;
+    background: lightskyblue;
+    color: black;
 }

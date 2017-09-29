@@ -3,8 +3,10 @@
 <head>
     <link rel="stylesheet" href="../static/bootstrap.min.css" />
     <script src="../static/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/style.css" />
     <script src="../static/index.js"></script>
+
 </head>
 
 <body>
@@ -12,9 +14,55 @@
         <div class="container">
             <div class="page-header" style="text-align:center;">
                 <h1>Hello {{ name }}!</h1>
-            </div>            
+            </div>
+            <div class="row" style="margin-top:30px;margin-bottom:30px;">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="panel panel-default">
+
+                        <div class="panel-heading"><strong>Upload files</strong> <small> </small></div>
+                        <div class="panel-body">
+                            <form action="http://localhost:5000/uploader" method="POST" enctype="multipart/form-data">
+                                <div class="col-lg-3 col-md-3">
+                                    <input type="file" name="file" />
+                                </div>
+                                <div class="col-lg-7 col-md-7">
+                                    <input type="text" name="filename" placeholder="File Name">
+                                </div>
+                                <div class="col-lg-2 col-md-2">
+                                    <input type="submit" value="Upload File" />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row" style="margin-top:30px;margin-bottom:30px;">
+                    <div class="panel-heading"><strong>Download Files</strong> <small> </small></div>
+                    <div class="panel-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>FileName</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for file in files %}                                
+                                <tr>
+                                    <td>{{ file.name}}</td>
+                                    <td><a href= {{ url_for('downloadFile',id= file.id) }}>Download File</a></td>
+                                </tr>
+                                {% endfor %}                            
+                            </tbody>
+                        </table>                                                    
+                    </div>      
+
+
+            </div>
+
+
         </div>
-    </div>
 </body>
 
 </html>
