@@ -1,11 +1,18 @@
 <html>
 
 <head>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">        
     <link rel="stylesheet" href="../static/bootstrap.min.css" />
     <script src="../static/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/style.css" />
     <script src="../static/index.js"></script>
+
+    <script>
+        function Validate() {
+            return confirm('Are you sure you want to delete?');
+        }
+    </script>
 
 </head>
 
@@ -45,6 +52,7 @@
                                 <tr>
                                     <th>FileName</th>
                                     <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -52,6 +60,7 @@
                                 <tr>
                                     <td>{{ file.name}}</td>
                                     <td><a href= {{ url_for('downloadFile',id= file.id) }}>Download File</a></td>
+                                    <td><a href= {{ url_for('deleteFile',id= file.id) }} OnClick="return Validate();">Delete File</a></td>
                                 </tr>
                                 {% endfor %}                            
                             </tbody>

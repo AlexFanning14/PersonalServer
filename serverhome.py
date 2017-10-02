@@ -16,6 +16,7 @@ DBsession = sessionmaker(bind=engine)
 db_session = DBsession()
 
 app = Flask(__name__)
+#Read Secret key from text file
 app.secret_key = 'randomString'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -24,7 +25,6 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def login():
   return render_template('login.html', isError = False)
 
-  
 
 @app.route("/index", methods = ['POST','GET'])
 def displayHome():
@@ -55,7 +55,7 @@ def upload_file():
     newFile = File(name = filename, path = fullpath)
     db_session.add(newFile)
     db_session.commit()
-    return jsonify(newFile = newFile.serialize)
+    return redirect('/index')
     
 @app.route('/files', methods = ['GET'])
 def files_endpoint():
@@ -69,6 +69,19 @@ def files_endpoint():
 def downloadFile(id):
   file = db_session.query(File).get(id)
   return send_from_directory(app.config['UPLOAD_FOLDER'],file.name, as_attachment=True)
+
+@app.route('/deleteFile/<id>')
+def deleteFile(id):
+  file = db_session.query(File).get(id)  
+  relPath = os.path.join(app.config['UPLOAD_FOLDER'],file.name)
+  if os.path.isfile(relPath):
+   os.remove(relPath)
+   db_session.delete(file)
+   db_session.commit()
+   return redirect('/index')
+  else:
+   return "Error"
+  
 
   
 def getAllFilesJson():
