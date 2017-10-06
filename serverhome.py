@@ -45,24 +45,26 @@ def displayHome():
       return render_template('login.html', isError = False)
     
     
-@app.route('/uploader', methods = ['GET', 'POST'])
+@app.route('/uploader', methods = ['POST'])
 def upload_file():
   if request.method == 'POST':
     f = request.files['file']
-    filename = secure_filename(f.filename)
-    fullpath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    f.save(fullpath)
-    newFile = File(name = filename, path = fullpath)
-    db_session.add(newFile)
-    db_session.commit()
+    upload_file(f)
     return redirect('/index')
+
+@app.route('/upload', methods = ['POST'])
+def upload_file_from_android():
+  if request.method == 'POST':
+    f = request.data
+    upload_file(f)
+    return redirect('/index')
+
     
 @app.route('/files', methods = ['GET'])
 def files_endpoint():
-  if 'username' in session:      
-    return getAllFilesJson()
-  else:
-    return render_template('login.html', isError = False)
+  #if Validated:      
+  return getAllFilesJson()
+  
 
 
 @app.route('/downloadFile/<id>')
@@ -81,7 +83,14 @@ def deleteFile(id):
    return redirect('/index')
   else:
    return "Error"
-  
+
+def upload_file(f):
+  filename = secure_filename(f.filename)
+  fullpath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+  f.save(fullpath)
+  newFile = File(name = filename, path = fullpath)
+  db_session.add(newFile)
+  db_session.commit()
 
   
 def getAllFilesJson():
@@ -90,5 +99,4 @@ def getAllFilesJson():
 
 
 if __name__ == '__main__':
-    app.debug = True
     app.run(host='0.0.0.0', port=5000)
