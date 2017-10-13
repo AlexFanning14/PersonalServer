@@ -1,4 +1,5 @@
 import os
+import sys
 from flask import Flask, request, render_template, redirect, url_for, session, jsonify, send_from_directory
 from werkzeug import secure_filename
 from utilities import validateUser
@@ -55,9 +56,10 @@ def upload_file():
 @app.route('/upload', methods = ['POST'])
 def upload_file_from_android():
   if request.method == 'POST':
-    f = request.data
+    f = request.files['uploadfile']
     upload_file(f)
     return redirect('/index')
+    
 
     
 @app.route('/files', methods = ['GET'])
@@ -65,6 +67,13 @@ def files_endpoint():
   #if Validated:      
   return getAllFilesJson()
   
+@app.route('/deleteAllFiles')
+def deleteAllFiles():
+  files = db_session.query(File).all()
+  for f in files:
+    db_session.delete(f)
+    db_session.commit()
+  return redirect('/index')
 
 
 @app.route('/downloadFile/<id>')
@@ -85,6 +94,7 @@ def deleteFile(id):
    return "Error"
 
 def upload_file(f):
+  print(f.filename, file =sys.stdout)
   filename = secure_filename(f.filename)
   fullpath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
   f.save(fullpath)

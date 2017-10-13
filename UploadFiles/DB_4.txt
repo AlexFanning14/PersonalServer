@@ -1,5 +1,0 @@
-isNull(@Homeworker,HomeworkerID)
-
-If String.IsNullOrEmpty(e.Command.Parameters("@CusID").Value) Then
-            e.Command.Parameters("@CusID").Value = DBNull.Value
-        End If
